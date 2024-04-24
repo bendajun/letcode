@@ -1,0 +1,269 @@
+<script>
+
+// 1. 深克隆
+const deepClone = (obj) => {
+  if (obj === null || typeof obj !== 'object') {
+    return obj
+  }
+  const res = Array.isArray(obj) ? [] : {}
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      res[key] = deepClone(obj[key])
+    }
+  }
+
+  return res
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 2. 函数柯里化
+const add = (a, b, c, d) => a + b + c + d
+function curry(fn) {
+  const length = fn.length
+  return function fn1(...args) {
+    if (args.length >= length) {
+      return fn(...args)
+    } else {
+      return function fn2(...args2) {
+        const num = [...args, ...args2]
+        return fn1(...num)
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 3. 防抖
+const debounce = (fn, time = 800) => {
+  let timer = null
+  return () => {
+    if (timer) clearTimeout(timer)
+    timer = setTimeout(() => {
+      fn()
+    }, time)
+  }
+}
+
+const debounceFn = debounce(() => {})
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 4. 节流
+const throttle = (fn, time = 800) => {
+  let start = 0
+  return () => {
+    const now = Date.now()
+    if (now - start >= time) {
+      start = now
+      fn()
+    }
+  }
+}
+
+const throttleFn = throttle(() => {})
+
+
+
+
+
+
+
+
+
+
+
+// 5. 节流
+const throttle2 = (fn, time = 800) => {
+  let timer = null
+  return () => {
+    if (!timer) {
+      timer = setTimeout(() => {
+        fn()
+        clearTimeout(timer)
+      }, time)
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+// 6. 获取页面上标签最多的元素
+const getMaxTag = () => {
+  const tags = [...document.querySelectorAll('*')].map(node => node.tagName)
+  const tagNumObj = tags.reduce((pre, cur) => {
+    pre[cur] =  pre[cur] ? pre[cur] + 1 : 1
+    return pre
+  }, {})
+  const sortArr = Object.entries(tagNumObj).sort((a, b) => b[1] - a[1])
+  const res = sortArr.filter(item => item[1] === sortArr[0][1]).map(item => item[0])
+  return res
+}
+
+
+
+
+
+
+
+
+
+
+
+// 7. 手写call
+Function.prototype.myCall = function (obj, ...args) {
+  obj = obj || window
+  const fn = Symbol()
+  obj[fn] = this // 谁调用this就是谁，testCall.myCall() 那么this就是 testCall
+  const res = obj[fn](...args)
+  delete obj[fn]
+  return res
+}
+
+function testCall(...args) {
+  console.log('testCall', this, ...args)
+}
+const testCallObj = { a: 1 }
+testCall.myCall(testCallObj, 1, 2)
+
+
+
+
+
+
+
+
+
+
+// 9. 手写bind
+Function.prototype.myBind = function (obj, ...args) {
+  const that = this
+  return function(...arg2) {
+    return that.call(obj, ...args, ...arg2)
+  }
+}
+
+function testBind(...args) {
+  console.log('testBind', this, ...args)
+}
+const testBindObj = { num: 1 }
+const testBindFn =  testBind.myBind(testBindObj)
+testBindFn(1, 2)
+
+
+
+
+
+
+
+
+// 8. 发布订阅
+class Publisher {
+  subers = []
+
+  sub (suber) {
+    if (!this.subers.find(item => item.name === suber.name)) {
+      this.subers.push(suber)
+    }
+  }
+
+  unSub (suber) {
+    this.subers = this.subers.filter(item => item.name !== suber.name) 
+  }
+
+  send (data) {
+    this.subers.forEach(item => item.message(data))
+  }
+}
+
+class Suber {
+  constructor(name) {
+    this.name = name
+  }
+
+  message (data) {
+    console.log(`${this.name}: this is ${data}`)
+  }
+}
+const publish = new Publisher()
+const suber1 = new Suber('suber1')
+const suber2 = new Suber('suber2')
+publish.sub(suber1)
+publish.sub(suber2)
+publish.send('apple')
+
+
+
+
+
+
+
+// 9. 手写一个new操作符
+
+  // 1）创建一个空对象{}
+  // 2）将该空对象的原型指向构造函数的原型；
+  // 3）改变this指向，调用构造函数，为空对象添加属性和方法，获得构造函数的返回值；
+  // 4）判断返回值类型，如果为引用类型，则返回返回值；如果为简单数据类型，则返回该空对象。
+function myNew (fn, ...args) {
+  const obj = {}
+  obj.__proto__ = fn.prototype
+  const res = fn.apply(obj, args)
+
+  return typeof res === 'object' ? res : obj
+}
+
+function TestMyNew(name,age) {
+  this.name = name
+  this.age = age
+ // return [1,2,3]
+}
+TestMyNew.prototype.height = 180
+ 
+let testMyNew1 = new TestMyNew('zs', 14)
+let testMyNew2 = myNew(TestMyNew, 'ls',13)
+console.log('testMyNew1', testMyNew1)
+console.log('testMyNew2', testMyNew2)
+</script>
