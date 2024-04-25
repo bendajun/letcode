@@ -13,17 +13,17 @@
  */
 
 /**
- * @param {number[]} nums
+ * @param {number[]} arr
  * @return {number}
  */
-var maxSubArray1 = function (nums) {
+var maxSubArray1 = function (arr) {
   let pre = 0;
-  let maxAns = nums[0];
-  nums.forEach(item => {
+  let sum = arr[0];
+  arr.forEach(item => {
     pre = Math.max(pre + item, item);
-    maxAns = Math.max(maxAns, pre);
+    sum = Math.max(sum, pre);
   });
-  return maxAns;
+  return sum;
 };
 
 console.log(maxSubArray1([-2, 1, -3, 4, -1, 2, 1, -5, 4]))

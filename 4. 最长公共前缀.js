@@ -14,15 +14,18 @@
  */
 const longestCommonPrefix = (strs) => {
   let res = ''
-  let firstItem = strs[0]
+  const firstItem = arr[0]
+
   for (let i = 0; i < firstItem.length; i++) {
-    for (let j = 1; j < strs.length; j++) {
-      if (strs[j][i] !== firstItem[i]) return res
+    for (let j = 1; j < arr.length; j++) {
+      if (arr[j][i] !== firstItem[i]) return res
     }
     res += firstItem[i]
   }
+
   return res
 }
 
 console.log(longestCommonPrefix(['flower','flow','flight']))
 console.log(longestCommonPrefix(['dog','racecar','car']))
+console.log(longestCommonPrefix(['dog','dacecar','dar']))

@@ -1,4 +1,6 @@
-/** 自己的解法
+/** 
+ * 给定一个整数数组 nums 和一个整数目标值 target ，在数组中找出和为目标值target的那两个整数，返回两个整数的数组下标
+ * 自己的解法
  * @param {number[]} nums
  * @param {number} target
  * @return {number[]}
@@ -6,9 +8,8 @@
  * 空间复杂度：O(1)
  */
 const twoSum = function (nums, target) {
-  const length = nums.length
-  for (let i = 0; i < length - 1; i++) {
-    for (let j = i + 1; j < length; j++) {
+  for (let i = 0; i < nums.length - 1; i++) {
+    for (let j = i + 1; j < nums.length; j++) {
       if (nums[i] + nums[j] === target) {
         return [i, j]
       }

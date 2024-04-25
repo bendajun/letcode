@@ -17,14 +17,14 @@ const isPalindrome = function (x) {
  * @return {boolean}
  */
  const isPalindrome2 = function (x) {
-  const stringNum = String(x)
-  const length = stringNum.length
-  const middle = Math.floor(length / 2)
-  for (let i = 0; i < middle; i++) {
-    if (stringNum[i] !== stringNum[length - 1 - i]) {
+  const str = String(num)
+  const middleIndex = Math.floor(str.length / 2)
+  for (let i = 0; i < middleIndex; i++) {
+    if (str[i] !== str[str.length - i - 1]) {
       return false
     }
   }
+
   return true
 };
 

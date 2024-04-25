@@ -32,17 +32,18 @@
 const isValid = function (s) { // []{}
   const stack = []
   const map = {
-    '(': ')',
+    '[': ']',
     '{': '}',
-    '[': ']'
+    '(': ')'
   }
 
-  for (const x of s) {
-    if (x in map) {
-      stack.push(x)
+  for (const item of str) {
+    if (item in map) {
+      stack.push(item)
       continue
     }
-    if (map[stack.pop()] !== x) return false
+
+    if (map[stack.pop()] !== item) return false
   }
 
   return stack.length === 0

@@ -32,15 +32,15 @@ var strStr2 = function (haystack, needle) {
   return res
 };
 
-var strStr3 = function (haystack, needle) {
-  const n = needle.length
-  for (let i = 0; i + n <= haystack.length; ++i) {
-    if (haystack.slice(i, i + n) === needle) {
+const strStr3 = (str, target) => {
+  for (let i = 0; i <= str.length; i++) {
+    if (str.slice(i, i + target.length) === target) {
       return i
     }
   }
+
   return -1
-};
+}
 
 /**---------------------------
   * 时间复杂度：O(n×m)，其中 n 是字符串 haystack 的长度，m 是字符串 needle 的长度。

@@ -17,21 +17,21 @@
  * @param {*} x 
  * @returns 
  */
-var mySqrt = function (x) {
-  if (x == 0) return x
-    
-  for (let i = 1; i <= x; i++) {
-    if (i * i === x) return i
-    if (i * i > x) return i - 1
+const fn = (num) => {
+  for (let i = 0; i <= num; i++) {
+    if (i * i === num) return i
+    if (i * i > num) return i - 1
   }
-};
+}
 
-console.log(mySqrt(2))
+console.log(fn(0))
 
-console.log(mySqrt(4))
+console.log(fn(2))
 
-console.log(mySqrt(8))
+console.log(fn(4))
 
-console.log(mySqrt(9))
+console.log(fn(8))
 
-console.log(mySqrt(24))
+console.log(fn(9))
+
+console.log(fn(24))
