@@ -27,10 +27,13 @@ const deepClone = (obj) => {
 
 
 
-
-
-
 // 2. 函数柯里化
+/*
+  把接受的多个参数变为一系列接受单一参数的函数
+  通过闭包和递归的方式实现的
+  优点：灵活地支持部分参数的应用，进行代码抽离，公共复用，延迟执行
+  缺点：嵌套的函数多，占用内存多，效率低
+*/
 const add = (a, b, c, d) => a + b + c + d
 function curry(fn) {
   const length = fn.length
@@ -45,7 +48,6 @@ function curry(fn) {
     }
   }
 }
-
 
 
 
@@ -82,9 +84,6 @@ const debounceFn = debounce(() => {})
 
 
 
-
-
-
 // 4. 节流
 const throttle = (fn, time = 800) => {
   let start = 0
@@ -98,9 +97,6 @@ const throttle = (fn, time = 800) => {
 }
 
 const throttleFn = throttle(() => {})
-
-
-
 
 
 
@@ -142,8 +138,6 @@ const getMaxTag = () => {
   const res = sortArr.filter(item => item[1] === sortArr[0][1]).map(item => item[0])
   return res
 }
-
-
 
 
 
@@ -199,46 +193,45 @@ testBindFn(1, 2)
 
 
 
-
 // 8. 发布订阅
 class Publisher {
-  subers = []
+  subers = {}
 
-  sub (suber) {
-    if (!this.subers.find(item => item.name === suber.name)) {
-      this.subers.push(suber)
+  add (suber, callback) {
+    if (!this.subers[suber]) {
+      this.subers[suber] = []
+    }
+    this.subers[suber].push(callback)
+  }
+
+  remove (suber) {
+    if (this.subers[suber]) {
+      delete this.subers[suber]
     }
   }
 
-  unSub (suber) {
-    this.subers = this.subers.filter(item => item.name !== suber.name) 
-  }
-
-  send (data) {
-    this.subers.forEach(item => item.message(data))
+  send (suber, data) {
+    if (this.subers[suber]) {
+      this.subers[suber].forEach(cb => cb(data))
+    }
   }
 }
 
-class Suber {
-  constructor(name) {
-    this.name = name
-  }
+const pub = new Publisher()
 
-  message (data) {
-    console.log(`${this.name}: this is ${data}`)
-  }
-}
-const publish = new Publisher()
-const suber1 = new Suber('suber1')
-const suber2 = new Suber('suber2')
-publish.sub(suber1)
-publish.sub(suber2)
-publish.send('apple')
+/* pub.add('sub1', (data) => {
+  console.log(`sub1-1 => ${data}`)
+})
 
+pub.add('sub1', (data) => {
+  console.log(`sub1-2 => ${data}`)
+})
 
+pub.add('sub2', (data) => {
+  console.log(`sub2 => ${data}`)
+})
 
-
-
+pub.send('sub1', 'pubData') */
 
 
 // 9. 手写一个new操作符
@@ -266,4 +259,8 @@ let testMyNew1 = new TestMyNew('zs', 14)
 let testMyNew2 = myNew(TestMyNew, 'ls',13)
 console.log('testMyNew1', testMyNew1)
 console.log('testMyNew2', testMyNew2)
+
+
 </script>
+
+
