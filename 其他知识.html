@@ -103,11 +103,28 @@
         合理使用缓存
         路由懒加载
         keep-alive缓存组件
-        使用code splitting将代码进行分割，避免将所有代码打包到一个文件，减少响应体积
-        fileLoader和url去处理图片
+        
+        
 
+      webpack优化
+        JS代码压缩        terser-webpack-plugin
+        CSS代码压缩       css-minimizer-webpack-plugin
+        Html文件代码压缩  HtmlWebpackPlugin
+        文件大小压缩       compression-webpack-plugin和nginx的gzip压缩
+        图片压缩          fileLoader和url去处理图片
+        Tree Shaking
+        代码分离
+        内联 chunk
 
-
+    提高Webpack的构建速度
+        优化 loader 配置                在使用Loader时，可以通过配置include、exclude、test属性来匹配文件
+        合理使用 resolve.extensions     通过resolve.extensions是解析到文件时自动添加拓展名 extensions:[".warm",".mjs",".js",".json"]
+        优化 resolve.modules            告知 webpack 去哪些目录下寻找第三方模块，默认值为['node_modules']。可以通过指明存放第三方模块的绝对路径来减少寻找的时间。
+        优化 resolve.alias              通过配置alias以减少查找过程
+        使用 DLLPlugin 插件             不经常改变的代码，抽成一个共享的库，减少不必要的打包构建
+        使用 cache-loader               在一些性能开销较大的 loader 之前添加 cache-loader，以将结果缓存到磁盘里，显著提升二次构建速度
+        terser 启动多线程               开启多进程并行运行可以提高构建速度  new TerserPlugin
+        合理使用 sourceMap              
 
 
         200	OK。请求成功，服务器正常返回请求的数据。
@@ -185,6 +202,12 @@ Vue 的 diff 算法：
 vue的列表对比，采用的是两端到中间比对的方式，找到最长的相同子序列。
 Vue 会对动态节点进行跟踪，节点在新旧虚拟 DOM 中位置发生变化，Vue 会尽可能地将其移动到新的位置，而不是删除和重新插入节点。（核心思想是移动复用节点）
 Vue3里面有静态提升，静态节点直接复用
+
+
+
+
+fiber是一种模拟调用栈的特殊链表数据结构，为了解决传统调用栈无法暂停的问题，是React协调算法，目的是提高性能，解决调度问题。
+fiber实现了增量渲染和并发，可以将渲染过程分割成多个阶段，每个阶段可以中断和恢复，在浏览器允许的情况下一点点拼凑出最终渲染效果，在渲染时可以更好地控制优先级，先做最高优先级的事。
 
 
 */

@@ -26,7 +26,6 @@ const deepClone = (obj) => {
 
 
 
-
 // 2. 函数柯里化
 /*
   把接受的多个参数变为一系列接受单一参数的函数
@@ -50,6 +49,19 @@ function curry(fn) {
 }
 
 
+
+
+
+// 斐波那契数列
+// 斐波那契数列又被称为黄金分割数列，指的是这样的一个数列：1,1,2,3,5,8,13,21,34....
+
+const fibonacci = (n) => {
+  if (n === 1 || n === 2) {
+    return 1
+  }
+  
+  return fibonacci(n - 1) + fibonacci(n - 2)
+}
 
 
 
