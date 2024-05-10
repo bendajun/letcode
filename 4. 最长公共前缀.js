@@ -4,7 +4,7 @@
  * 输入：strs = ['flower','flow','flight'] 输出：'fl'
  * 输入：strs = ['dog','racecar','car'] 输出：''
  **/
- 
+
  /** 
  * 时间复杂度：O(mn)，其中 m 是字符串数组中的字符串的平均长度，n 是字符串的数量。
  *   最坏情况下，字符串数组中的每个字符串的每个字符都会被比较一次。
@@ -12,7 +12,7 @@
  * @param {string[]} strs
  * @return {string}
  */
-const longestCommonPrefix = (strs) => {
+const longestCommonPrefix = (arr) => {
   let res = ''
   const firstItem = arr[0]
 

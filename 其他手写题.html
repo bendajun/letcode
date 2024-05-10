@@ -80,7 +80,7 @@ const debounce = (fn, time = 800) => {
   return () => {
     if (timer) clearTimeout(timer)
     timer = setTimeout(() => {
-      fn()
+      return fn()
     }, time)
   }
 }

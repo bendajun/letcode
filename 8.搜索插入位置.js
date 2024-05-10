@@ -77,7 +77,7 @@ const fn = (arr, target) => {
 
   if (index === -1) {
     for (let i = 0; i <= arr.length; i++) {
-      if (arr[i] >= target || i === arr.length) {
+      if (arr[i] > target || i === arr.length) {
         index = i
         break
       }
