@@ -12,7 +12,7 @@ const testFn = async (promiseList) => {
   console.log('我执行了2')
   console.log(res)
 }
-
+console.log('ces')
 testFn([
   new Promise(res => {
   setTimeout(() => {
