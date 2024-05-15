@@ -1,21 +1,24 @@
 const promiseAll = (arr) => {
   const res = []
-  for (let i = 0; i < arr.length; i++) {
-    Promise.resolve(arr[i]).then(data => {
-      res[i] = data
-      if (res.length === arr.length) {
-        Promise.resolve(res)
-      }
-    }).catch(err => {
-      Promise.reject(err)
-    })
-  }
+  let count = 0
+  return new Promise((resolve, reject) => {
+    for (let i = 0; i < arr.length; i++) {
+      Promise.resolve(arr[i]).then(data => {
+        res[i] = data
+        if (++count === arr.length) {
+          resolve(res)
+        }
+      }).catch(err => {
+        reject(err)
+      })
+    }
+  })
 }
 
 const testFn = async (promiseList) => {
-  console.log('我执行了')
-  const res = await Promise.all(promiseList);
-  console.log('我执行了2')
+  
+  const res = await promiseAll(promiseList);
+ 
   console.log(res)
 }
 
