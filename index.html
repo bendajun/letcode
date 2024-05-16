@@ -22,17 +22,12 @@
   <!-- <script src="./6.合并两个有序链表.js"></script> -->
   <script src="./15.手写Promise.js"></script>
   <script>
+var a = 1;
+(function a() {
+ a = 2;
+ console.log(a)  // 2
+})()
 
-Promise.resolve(console.log(0))
-  .then(() => {
-    console.log(1);
-    Promise.resolve(console.log(5))
-      .then(() => console.log(3))
-      .then(() => console.log(4))
-      .then(() => console.log(6));
-  })
-  .then(() => console.log(2))
-  .then(() => console.log(7));
   </script>
 </body>
 </html>

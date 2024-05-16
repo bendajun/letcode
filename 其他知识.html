@@ -88,7 +88,36 @@
     最后进行将重绘，进行一些颜色，背景渲染，然后显示到屏幕上面。
 
 
-
+    性能优化：
+      脚手架搭建：
+        1. JS代码压缩                         terser-webpack-plugin
+        2. CSS代码压缩                        css-minimizer-webpack-plugin
+        3. Html文件代码压缩                   HtmlWebpackPlugin
+        4. 图片处理小于limit转base64          fileLoader和url-loader去处理图片
+        5. Tree Shaking去除无用代码           esModule
+        6. 代码分离多chunk，减少首屏渲染，并行加载
+        7. 抽离DLL包，不变动的第三包单独构建dll包
+        8. 使用oneof匹配单一loader
+        9. 使用thread-loader开启多线程构建
+        10. externals排除不打包的第三方包，通过CDN引入
+      开发中：
+        1. 图片懒加载        IntersectionObserver
+        2. 防抖、节流
+        3. 异步defer和async以及脚本放在body下面
+        4. 大数据使用localStorage缓存
+        5. 路由懒加载
+        6. react使用useMemo、useCallBack、React.Memo，Vue使用计算属性，keepAlve缓存组件，合理使用v-show/v-if
+        7. 事件委托
+        8. 接口较慢数据量大使用骨架屏
+        9. 长列表使用虚拟列表
+        10. 使用css3动画代替js操作，浏览器对css3有优化
+        11. 尽量批量操作DOM，减少不必要的回流重绘
+        12. 小程序的分包策略，还有独立分包不依赖主包
+      线上：
+        1. 使用CDN来加载静态资源，如腾讯云OSS存储桶
+        2. 使用强缓存和协商缓存 cache-control/expries last-modify/if-modify-since Etag/if-none-Match
+        3. nginx配置gzip压缩静态资源
+        4. 使用http2
 
 
 
@@ -216,37 +245,50 @@ Proxy 可以监听数组的变化。
 
 
 
-React 的 diff 算法：
-react列表对比采用的是从左到右依次对比的方式（因为fiber链表架构的原因）
-React diff 算法会首先比较两棵树的根节点，、节点类型不同，直接删除旧，插入新节点；节点类型相同，继续比较子节点。（核心思想是比较和替换节点）
-
-Vue 的 diff 算法：
-vue的列表对比，采用的是两端到中间比对的方式，找到最长的相同子序列。
-Vue 会对动态节点进行跟踪，节点在新旧虚拟 DOM 中位置发生变化，Vue 会尽可能地将其移动到新的位置，而不是删除和重新插入节点。（核心思想是移动复用节点）
-Vue3里面有静态提升，静态节点直接复用
-
+    React 的 diff 算法：
+      react列表对比采用的是从左到右依次对比的方式（因为fiber链表架构的原因）
+      React diff 算法会首先比较两棵树的根节点，、节点类型不同，直接删除旧，插入新节点；节点类型相同，继续比较子节点。（核心思想是比较和替换节点）
+    Vue 的 diff 算法：
+      vue的列表对比，采用的是两端到中间比对的方式，找到最长的相同子序列。
+      Vue 会对动态节点进行跟踪，节点在新旧虚拟 DOM 中位置发生变化，Vue 会尽可能地将其移动到新的位置，而不是删除和重新插入节点。（核心思想是移动复用节点）
+      Vue3里面有静态提升，静态节点直接复用
 
 
-
-fiber是一种模拟调用栈的特殊链表数据结构，为了解决传统调用栈无法暂停的问题，是React协调算法，目的是提高性能，解决调度问题。
-fiber实现了增量渲染和并发，可以将渲染过程分割成多个阶段，每个阶段可以中断和恢复，在浏览器允许的情况下一点点拼凑出最终渲染效果，在渲染时可以更好地控制优先级，先做最高优先级的事。
-
-
-
-
-
-
-  qiankun微前端分为主应用和子应用，主应用register子应用和开启微前端，
-    关注一个路由匹配子应用，js沙箱隔离，css隔离，props传递， 资源预加载，跨域处理（设置CORS或者主应用进行nginx反向代理）
-    1. 通过popState（浏览器前进后退）/pushState/replaceState或者hashChange监听路由规则激活对应的子应用
-    2. 通过fetch加载子应用的entry入口，得到HTML模块，然后解析通过eval加载HTML中的Script脚本，挂载到主应用对应的container上
-    3.子应用不需要安装qiankun，需要修改webpack的ouput.libraryTarget为umd模式（支持 Commonjs、AMD，可以在浏览器或者非浏览器中运行），兼容性最好
-    4.子应用需要设置路由前缀和publicPath为主应用激活路由
-    5.子应用需要通过window.__POWER_BY_QIANKUN__判断是否在主应用中运行，来判断是否挂载到主应用的container下还是自己的根组件下，在主应用的时候隐藏菜单栏
-    6.子应用之间的跳转通过history.pushState()
+    keep-alive
+      1.搭配组件name属性使用
+      2.提供 include 和 exclude 属性，exclude优先级高
+      3.激活触发activated 和 移除触发deactivated
+      4.keep-alive内部缓存的是组件虚拟dom
+      5.内部有个cache对象存储组件实例，keys数组缓存键名，超过最大缓存数量max的时候，会删除最久未使用的即第一个，当cache中存在的组件被命中时，会调整组件key到最近
 
 
+    react fiber
+      背景：
+        react以前从setState到渲染完成整个过程是同步的。如果需要渲染的组件比较庞大，逻辑比较复杂， js就会占据主线程时间较长，会导致页面响应度变差，
+        导致react在动画、用户插入其他操作时体验就会变差，因为主线程是被js占用的，因此任何交互、布局、渲染都会停止，给用户的感觉就是页面被卡住了。
+      介绍：
+        fiber是一种模拟调用栈的特殊链表数据结构，为了解决传统调用栈无法暂停的问题，是React协调算法，目的是提高性能，解决调度问题。
+        fiber实现了增量渲染和并发，可以将渲染过程分割成多个阶段，每个阶段可以中断和恢复，
+        在浏览器允许的情况下一点点拼凑出最终渲染效果，在渲染时可以更好地控制优先级，先执行优先级高的事。
 
+    React在document处监听所有支持的事件，当事件发生并冒泡至document处时，React将事件内容封装并交由真正的处理函数运行。
+    减少了内存消耗，还能在组件挂载销毁时统一订阅和移除事件。
+    另外冒泡到 document 上的事件也不是原生浏览器事件，而是 React 自己实现的合成事件。消除了不同浏览器之前的兼容性，有相同的事件表现。
+    react17后面将事件绑定到根组件上了
+
+
+
+
+    qiankun微前端
+      关注一个路由匹配子应用，js沙箱隔离，css隔离，props传递， 资源预加载，跨域处理（设置CORS或者主应用进行nginx反向代理）
+      1. 分为主应用和子应用，主应用registerMicroApps子应用，调用start开启微前端
+      2. qiankun通过popState（浏览器前进后退）/pushState/replaceState或者hashChange监听路由规则激活对应的子应用
+      3. 子应用不需要安装qiankun，子应用需要设置路由前缀和publicPath为主应用激活路由，
+      4. 子应用需要通过window.__POWER_BY_QIANKUN__判断是否在主应用中运行，来判断是否挂载到主应用的container下还是自己的根组件下，在主应用的时候隐藏菜单栏
+      5. 子应用需要修改webpack的ouput.libraryTarget为umd模式（支持 Commonjs、AMD，可以在浏览器或者非浏览器中运行）
+      6. 主应用fetch加载子应用的entry入口，得到HTML模板，解析其中的Script脚本， 判断script是直接执行还是src资源，src资源fetch再次请求，最后script脚本通过eval执行
+      7. 子应用是umd模式，所以可以拿到入口文件暴露的生命周期函数，暴露的mount生命周期，传入主应用的container，子应用进行挂载
+      8.子应用之间的跳转通过history.pushState()
 
 */
 
@@ -282,6 +324,7 @@ fiber实现了增量渲染和并发，可以将渲染过程分割成多个阶段
       2.埋点元数据管理系统的需求开发迭代
       3.oneId用户标识统一模块开发、埋点产品体系建设开发
       4.对外保险公司定制化看板开发，涉及饼/折线/柱状/地图/漏斗/桑吉/关系/归因/知识图谱等图表分析看板。以及其他定制化功能开发
+      5.对外保险公司部署时，负责主子应用的微前端注册以及路由菜单处理
  */
   </script>
 </html>
