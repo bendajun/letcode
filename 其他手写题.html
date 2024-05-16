@@ -276,3 +276,23 @@ console.log('testMyNew2', testMyNew2)
 </script>
 
 
+<script src="./22.ProxySandbox.js"></script>
+<script>
+const pSandbox1 = new ProxySandbox();
+const pSandbox2 = new ProxySandbox();
+window.city = "window城市";
+window.country = "window国家";
+pSandbox1.active()
+pSandbox2.active();
+pSandbox1.proxy.city = "沙箱1城市";
+console.log(pSandbox1.proxy.city, pSandbox1.proxy.country); // 沙箱1城市 window国家
+pSandbox2.proxy.city = "沙箱2城市";
+console.log(pSandbox2.proxy.city, pSandbox2.proxy.country); // 沙箱2城市 window国家
+console.log(window.city); // window城市
+pSandbox1.inactive();
+pSandbox2.inactive();
+console.log(pSandbox1.proxy.city); // 沙箱1城市
+console.log(pSandbox2.proxy.city); // 沙箱2城市
+
+
+</script>

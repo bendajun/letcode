@@ -288,7 +288,13 @@ Proxy 可以监听数组的变化。
       5. 子应用需要修改webpack的ouput.libraryTarget为umd模式（支持 Commonjs、AMD，可以在浏览器或者非浏览器中运行）
       6. 主应用fetch加载子应用的entry入口，得到HTML模板，解析其中的Script脚本， 判断script是直接执行还是src资源，src资源fetch再次请求，最后script脚本通过eval执行
       7. 子应用是umd模式，所以可以拿到入口文件暴露的生命周期函数，暴露的mount生命周期，传入主应用的container，子应用进行挂载
-      8.子应用之间的跳转通过history.pushState()
+      8. 子应用之间的跳转通过history.pushState()
+      9. js隔离使用snapshotSandbox和proxySandbox来进行沙箱隔离
+            snapshotSandbox在激活销毁子应用的时候，通过保存window的快照来实现属性的保存和销毁，需要遍历window对象，性能差，不支持多个子应用激活，会存在污染
+            proxySandbox，通过Proxy来进行多实例的隔离机制，执行子应用js代码时，将将子应用的 window赋值为proxySandbox的实例，
+            子应用操作window实际操作对应的proxySandboxWindow，做的所有赋值都是操作的ProxyWindow，访问proxyWindow本身上没有的属性时，没有会去访问真实的window
+            这样就做到了window无污染和共存多个子应用。
+      10. 微前端css隔离采用的是ShadowDom节点来隔离，或者为对应的子应用添加一个对应的选择器
 
 */
 
