@@ -296,6 +296,46 @@ Proxy 可以监听数组的变化。
             这样就做到了window无污染和共存多个子应用。
       10. 微前端css隔离采用的是ShadowDom节点来隔离，或者为对应的子应用添加一个对应的选择器
 
+
+
+
+    webSocket
+      webSocket出现之前，想实现实时通信、服务端消息推送功能，是使用 Ajax 轮询两种方式，http包含较大请求头，浪费带宽，服务器压力大。
+      网络传输协议，基于TCP建立的双全工通信，允许服务端主动推送消息，只需要建立一次握手，就可以建立持久性的链接。
+        减少网络延迟，减少服务器压力。
+        可以用于实时聊天、在线协作、推送服务、在线游戏
+        const socket = new WebSocket('ws://localhost:8888')
+        socket.onopen = () => console.log('WebSocket connection opened')
+        socket.send('message')
+        socket.onmessage = event => console.log('event.data')
+        socket.onclose => console.log('close')
+
+
+    http头信息
+      请求头
+        Host                 主机
+        If-None-Match:       E-tag缓存
+        If-Modify-Since      Last-Modify缓存
+        cache-control        max-age强缓存
+        expries              绝对时间强缓存
+        cookie               cookie
+        user-agent           客户端信息
+        referer              请求来源
+        Accept               可处理媒体类型
+        accept-encoding      内容编码
+        accept-language      语言
+        Authorization        授权
+      响应头
+        content-type
+        Content-Language
+        Content-Length
+        E-tag
+        Last-Modify
+        Expires 
+        set-cookie
+        Server 
+        access-control-allow-origin
+        access-control-allow-methods
 */
 
 
