@@ -254,13 +254,6 @@ Proxy 可以监听数组的变化。
       Vue3里面有静态提升，静态节点直接复用
 
 
-    keep-alive
-      1.搭配组件name属性使用
-      2.提供 include 和 exclude 属性，exclude优先级高
-      3.激活触发activated 和 移除触发deactivated
-      4.keep-alive内部缓存的是组件虚拟dom
-      5.内部有个cache对象存储组件实例，keys数组缓存键名，超过最大缓存数量max的时候，会删除最久未使用的即第一个，当cache中存在的组件被命中时，会调整组件key到最近
-
 
     react fiber
       背景：
@@ -271,13 +264,43 @@ Proxy 可以监听数组的变化。
         fiber实现了增量渲染和并发，可以将渲染过程分割成多个阶段，每个阶段可以中断和恢复，
         在浏览器允许的情况下一点点拼凑出最终渲染效果，在渲染时可以更好地控制优先级，先执行优先级高的事。
 
+
     React在document处监听所有支持的事件，当事件发生并冒泡至document处时，React将事件内容封装并交由真正的处理函数运行。
     减少了内存消耗，还能在组件挂载销毁时统一订阅和移除事件。
     另外冒泡到 document 上的事件也不是原生浏览器事件，而是 React 自己实现的合成事件。消除了不同浏览器之前的兼容性，有相同的事件表现。
     react17后面将事件绑定到根组件上了
 
+    useTransition
+      官方说法：将状态更新标记为非阻塞的 transition 
+      被 startTransition 回调包裹的 setState 触发的渲染被标记为不紧急渲染，这些渲染可能被其他紧急渲染所抢占
+      const [isPending, startTransition] = useTransition()
+      isPending 它表示设置成过渡状态的操作是否在执行，利用这个值来显示一些loading效果，或者实现防抖节流操
+      如输入框输入，下面列表实时更新，数据量过大，你边输入，列表边更新，页面就会卡顿，使用startTransition(() => setInputValue(value))
+      将列表设置为过渡状态，让它的优先级降低，所以当你输入的时候， 下面列表更新不会阻塞你的输入，因为你的输入优先级更高
+      这样就能解决这个卡顿问题，还可以使用isPending来设置一个loading状态
+    useDeferredValue
+      可延迟的状态更新
+      const [query, setQuery] = useState('');
+      const deferredQuery = useDeferredValue(query)
+      在setState后，会先使用旧值进行重新渲染（因此它将返回旧值），然后在后台再使用新值进行另一个重新渲染，相当于多了一个旧值渲染和延迟渲染
+      如输入框输入，下面列表实时更新，数据量过大，列表就会卡顿。如果使用deferredQuery，输入值会使用之前的旧值给下面列表，而当前最新值会在后台进行渲染，
+      这个渲染的过程是可以被中断的，也就是如果有新的值过来了，正在后台进行的渲染操作会重新开始，类似防抖
+      类似防抖节流：
+          与react深度集合，可以根据用户设备来判断，性能好，显示就快
+          可以降低渲染优先级，可中断，如果输入过程中又进行其他操作，可以中断，然后处理其他优先级高的任务。
+    
+    两者都是为了优化效果，可中断，执行优先级高的任务，
+      startTransition 内部的更新任务变成了过渡任务，还给了个isPending去判断
+      useDeferredValue 是多一次旧值渲染，把原值延迟，达到优化效果
 
 
+
+    keep-alive
+      1.搭配组件name属性使用
+      2.提供 include 和 exclude 属性，exclude优先级高
+      3.激活触发activated 和 移除触发deactivated
+      4.keep-alive内部缓存的是组件虚拟dom
+      5.内部有个cache对象存储组件实例，keys数组缓存键名，超过最大缓存数量max的时候，会删除最久未使用的即第一个，当cache中存在的组件被命中时，会调整组件key到最近
 
     qiankun微前端
       关注一个路由匹配子应用，js沙箱隔离，css隔离，props传递， 资源预加载，跨域处理（设置CORS或者主应用进行nginx反向代理）
@@ -336,6 +359,23 @@ Proxy 可以监听数组的变化。
         Server 
         access-control-allow-origin
         access-control-allow-methods
+
+
+
+
+
+    webWork
+      作用为js创造多线程环境，创建Worker线程，将一些任务分给Worker线程进行。主线程运行同时,Worker线程后台运行
+      当Worker线程完成任务将结果返回给主线程，这样的好处是，一些计算密集型或高延迟的任务，被 Worker 线程负担了，主线程（通常负责 UI 交互）就会很流畅，不会被阻塞或拖慢。
+      无法读取 DOM 对象，无法使用document、window，可以使用navigator和location。
+      主线程与work通信是拷贝关系，即是传值而不是传址
+        const worker = new Worker('work.js')        // 参数是一个脚本文件，该文件就是 Worker 线程所要执行的任务，由于 Worker 不能读取本地文件，所以这个脚本必须来自网络
+        worker.postMessage('Hello World')           // 主线程调用worker.postMessage()方法，向 Worker 发消息
+        worker.onmessage = event => console.log(event.data) // 主线程通过worker.onmessage指定监听函数，接收子线程发回来的消息
+        self.onmessage = event => console.log(event.data) // work.js，内部有一个监听函数，监听message事件，也可以使用self.addEventListener('message', event => console.log(event.data))
+        self.postMessage('send data')              // self.postMessage()向主线程发送消息
+        importScripts('script1.js')                // Worker 内部如果要加载其他脚本（不能加载外部文件），用 importScripts()
+        self.close()                               // 用于在 Worker 内部关闭自身
 */
 
 
@@ -374,6 +414,6 @@ Proxy 可以监听数组的变化。
  */
   </script>
 </html>
-
+<script></script>
 
 
