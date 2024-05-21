@@ -13,24 +13,23 @@ var strStr1 = function (haystack, needle) {
   return haystack.indexOf(needle)
 };
 
+
 /**
  * 时间复杂度：O(n)，其中 n 是 haystack 的长度。
  * 空间复杂度：O(1)。只需要使用常数的额外空间。
- * @param {string} haystack
- * @param {string} needle
- * @return {number}
  */
-var strStr2 = function (haystack, needle) {
-  if (haystack === '' || needle === '') return 0
-  let res = -1
-  for (let i = 0; i < haystack.length; ++i) {
-    if (haystack.slice(i, i + needle.length) === needle) {
-      res = i
-      return res
+const strStr2 = (str, target) => {
+  if (str === '' || target === '') return 0
+  for (let i = 0; i < str.length; i++) {
+    if (str.slice(i, i + target.length) === target) {
+      return i
     }
   }
-  return res
-};
+  return -1
+}
+
+
+
 
 const strStr3 = (str, target) => {
   for (let i = 0; i <= str.length; i++) {

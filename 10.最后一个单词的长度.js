@@ -15,6 +15,17 @@
   解释：最后一个单词是长度为6的“joyboy”。
  */
 
+
+const lengthOfLastWord3 = (str) => {
+  const trimStr = str.trim()
+  for (let j = trimStr.length - 1; j >= 0; j--) {
+    if (trimStr[j] === ' ') {
+      return trimStr.length - j - 1
+    }
+  }
+}
+
+
 /**
  * 时间复杂度：O(n)，其中 n 是字符串的长度。最多需要反向遍历字符串一次。
  * 空间复杂度：O(1)。
@@ -58,3 +69,9 @@ console.log('---------------')
 console.log(lengthOfLastWord2('Hello World'))
 console.log(lengthOfLastWord2('   fly me   to   the moon  '))
 console.log(lengthOfLastWord2('luffy is still joyboy'))
+
+console.log('---------------')
+
+console.log(lengthOfLastWord3('Hello World'))
+console.log(lengthOfLastWord3('   fly me   to   the moon  '))
+console.log(lengthOfLastWord3('luffy is still joyboy'))

@@ -35,7 +35,7 @@ class MyPromise {
   }
 
   then (onFulfilled, onRejected) {
-    return new Promise((resolve, reject) => {
+    return new MyPromise((resolve, reject) => {
       if (this.state === FULFILLED) {
         const val = onFulfilled(this.value)
         if (isPromise(val)) {
@@ -48,7 +48,7 @@ class MyPromise {
       if (this.state === REJECTED) {
         const reason = onRejected(this.value)
         if (isPromise(reason)) {
-          val.then(y => resolve(y), r => reject(r))
+          reason.then(y => resolve(y), r => reject(r))
         } else {
           reject(reason)
         }
@@ -66,7 +66,7 @@ class MyPromise {
         this.rejectCallbacks.push(() => {
           const reason = onRejected(this.value)
           if (isPromise(reason)) {
-            val.then(y => resolve(y), r => reject(r))
+            reason.then(y => resolve(y), r => reject(r))
           } else {
             reject(reason)
           }
@@ -77,11 +77,11 @@ class MyPromise {
 }
 
 
-const p1 = new MyPromise((resolve, reject) => {
+/* const p1 = new MyPromise((resolve, reject) => {
   setTimeout(() => {
     resolve('this is data')
   }, 1000)
-})
+}) */
 
 /* p1.then(data => {
   console.log(data, 1)
@@ -102,9 +102,9 @@ p1.then(data => {
 }) */
 
 
-p1.then(data => {
+/* p1.then(data => {
   console.log(data, 1)
-  return new Promise((resolve, reject) => {
+  return new MyPromise((resolve, reject) => {
     setTimeout(() => {
       resolve('then1 return')
     }, 1000)
@@ -127,7 +127,7 @@ p1.then(data => {
   console.log(data, 4)
 }, err => {
   console.log(err, 'err4')
-})
+}) */
 
 /**
  * 判断函数是否为promise
@@ -136,7 +136,3 @@ p1.then(data => {
 function isPromise(obj) {
   return !!(obj && typeof obj === "object" && typeof obj.then === "function");
 }
-
-
-
-

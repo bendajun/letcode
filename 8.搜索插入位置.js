@@ -8,6 +8,14 @@
  * 输入: nums = [1], target = 0 输出: 0
  */
 
+const f = (arr, target) => {
+  for (let i = 0; i <= arr.length; i++) {
+    if (arr[i] >= target || i === arr.length) {
+      return i
+    }
+  }
+}
+
 /** 
  * 时间复杂度：O(n)，其中 n 是数组的长度。
  * 空间复杂度：O(1)。只需要使用常数的额外空间。
@@ -72,25 +80,10 @@ console.log(searchInsert2([1, 3, 5, 6], 7))
 console.log(searchInsert2([1, 3, 5, 6], 0))
 console.log(searchInsert2([1], 0))
 
-const fn = (arr, target) => {
-  let index = arr.findIndex(item => item === target)
-
-  if (index === -1) {
-    for (let i = 0; i <= arr.length; i++) {
-      if (arr[i] > target || i === arr.length) {
-        index = i
-        break
-      }
-    }
-  }
-
-  return index
-   
-}
-
 console.log('---')
-console.log(fn([1, 3, 5, 6], 5))
-console.log(fn([1, 3, 5, 6], 2))
-console.log(fn([1, 3, 5, 6], 7))
-console.log(fn([1, 3, 5, 6], 0))
-console.log(fn([1], 0))
+
+console.log(f([1, 3, 5, 6], 5))
+console.log(f([1, 3, 5, 6], 2))
+console.log(f([1, 3, 5, 6], 7))
+console.log(f([1, 3, 5, 6], 0))
+console.log(f([1], 0))
