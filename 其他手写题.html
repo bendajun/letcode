@@ -1,7 +1,6 @@
 <script>
-
-// 1. 深克隆
-const deepClone = (obj) => {
+  // 1. 深克隆
+  const deepClone = (obj) => {
   if (obj === null || typeof obj !== 'object') {
     return obj
   }
@@ -51,7 +50,6 @@ function curry(fn) {
 
 
 
-
 // 斐波那契数列
 // 斐波那契数列又被称为黄金分割数列，指的是这样的一个数列：1,1,2,3,5,8,13,21,34....
 
@@ -70,17 +68,13 @@ const fibonacci = (n) => {
 
 
 
-
-
-
-
 // 3. 防抖
 const debounce = (fn, time = 800) => {
   let timer = null
   return () => {
     if (timer) clearTimeout(timer)
     timer = setTimeout(() => {
-      return fn()
+      fn()
     }, time)
   }
 }
@@ -200,6 +194,9 @@ const testBindFn =  testBind.myBind(testBindObj)
 testBindFn(1, 2)
 
 
+Function.prototype.myBinds = function (obj, ...args) {
+ return (...args2) => this.call(obj, ...args, ...args2)
+}
 
 
 
@@ -253,8 +250,9 @@ pub.send('sub1', 'pubData') */
   // 3）改变this指向，调用构造函数，为空对象添加属性和方法，获得构造函数的返回值；
   // 4）判断返回值类型，如果为引用类型，则返回返回值；如果为简单数据类型，则返回该空对象。
 function myNew (fn, ...args) {
-  const obj = {}
-  obj.__proto__ = fn.prototype
+  /* const obj = {}
+  obj.__proto__ = fn.prototype */
+  const obj = Object.create(fn.prototype)
   const res = fn.apply(obj, args)
 
   return typeof res === 'object' ? res : obj
@@ -271,28 +269,6 @@ let testMyNew1 = new TestMyNew('zs', 14)
 let testMyNew2 = myNew(TestMyNew, 'ls',13)
 console.log('testMyNew1', testMyNew1)
 console.log('testMyNew2', testMyNew2)
-
-
-</script>
-
-
-<script src="./22.ProxySandbox.js"></script>
-<script>
-const pSandbox1 = new ProxySandbox();
-const pSandbox2 = new ProxySandbox();
-window.city = "window城市";
-window.country = "window国家";
-pSandbox1.active()
-pSandbox2.active();
-pSandbox1.proxy.city = "沙箱1城市";
-console.log(pSandbox1.proxy.city, pSandbox1.proxy.country); // 沙箱1城市 window国家
-pSandbox2.proxy.city = "沙箱2城市";
-console.log(pSandbox2.proxy.city, pSandbox2.proxy.country); // 沙箱2城市 window国家
-console.log(window.city); // window城市
-pSandbox1.inactive();
-pSandbox2.inactive();
-console.log(pSandbox1.proxy.city); // 沙箱1城市
-console.log(pSandbox2.proxy.city); // 沙箱2城市
 
 
 </script>

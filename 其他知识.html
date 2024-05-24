@@ -20,7 +20,7 @@
   </style>
   <body>
     <div class="wrap">
-      <h3 class="title">1.前端性能优化有哪些</h3>
+
       <div class="contents">
         
       </div>
@@ -59,36 +59,36 @@
 
 
 /*
-2.从浏览器地址栏输入 url 到显示页面的步骤
-  (以 HTTP 为例)在浏览器地址栏输入 URL
-  1.先查看是否命中强缓存
-      浏览器查看是否命中强缓存，如果请求资源在缓存中， Expires和Cache-Control，一个绝对时间一个相对时间，后者优先级更高，命中强缓存直接返回使用。状态码200，form memory cache，from disk cache
-  2.进行DNS解析
-      没有命中强缓存，浏览器解析 URL协议，域名，端口，查看DNS缓存，浏览器DNS缓存->本机缓存hosts->路由器DNS缓存->递归DNS服务器缓存(根域名服务器、顶级域名服务器、权威域名服务器)
-  3.进行TCP的3次握手
-      然后进行TCP的链接，进行3次握手，客户端发起 SYN同步标签请求，表示要建立连接。SYN 是 TCP 协议中的特殊标志，用于表示建立连接的请求。
-      服务器请求后，发送 ACK确认和 SYN 报文，表示同意建立连接。ACK 表示确认收到数据，SYN 表示继续建立连接。
-      客户端收到服务器的 ACK 和 SYN 报文后，再发送一个 ACK确认报文，表示连接已经建立成功
-  4.发送请求，服务端判断是否命中协商缓存
-      浏览器第一次请求一个资源的时候，服务器返回的header中会加上Last-Modified，Last-Modified是一个时间标识该资源的最后修改时间。或者ETag，保证每一个资源是唯一的，资源变化都会导致ETag变化
-      浏览器再次请求该资源的时候，发送的请求头中会携带 If-Modified-Since，就为之前返回的 Last-Modified的值，服务器收到If-Modified-Since之后，根据资源的最后修改时间判断是否命中缓存。
-      或者携带If-None-Match，也就是返回的Etag
-      服务器判断，没有更新过期，浏览器可以使用缓存，返回304，不会返回资源内容。否则返回新资源和200
-  5.资源发送完毕之后进行TCP的四次挥手
-      客户端发送一个带有FIN标志的数据包，标识要断开链接
-      服务端收到回复一个ACK包，标识同意收到，服务器进入CLOSE-WAIT状态
-      但是这个时候只是表示客户端不再请求，不代表服务端数据发送完毕，所以服务端数据发生完成后，发送一个带有FIN标志的包，表示断开链接，然后等待客户端的最后确认
-      客户端发送一个最后的ACK确认信号，服务端收到后就进行断开状态
-  6.浏览器的渲染过程
-    解析HTML：浏览器的第一步是解析HTML代码，生成DOM树
-    解析CSS：构造 CSSOM 树
-    如果遇到script标签时，JS引擎会进行加载并执行，这个过程会阻塞HTML、CSS的解析过程
-    DOM树和css树结合，生成render tree（渲染树）
-    然后进行布局（回流），计算确定节点位置/大小/布局等
-    最后进行将重绘，进行一些颜色，背景渲染，然后显示到屏幕上面。
+  2.从浏览器地址栏输入 url 到显示页面的步骤
+    (以 HTTP 为例)在浏览器地址栏输入 URL
+    1.先查看是否命中强缓存
+        浏览器查看是否命中强缓存，如果请求资源在缓存中， Expires和Cache-Control，一个绝对时间一个相对时间，后者优先级更高，命中强缓存直接返回使用。状态码200，form memory cache，from disk cache
+    2.进行DNS解析
+        没有命中强缓存，浏览器解析 URL协议，域名，端口，查看DNS缓存，浏览器DNS缓存->本机缓存hosts->路由器DNS缓存->递归DNS服务器缓存(根域名服务器、顶级域名服务器、权威域名服务器)
+    3.进行TCP的3次握手
+        然后进行TCP的链接，进行3次握手，客户端发起 SYN同步标签请求，表示要建立连接。SYN 是 TCP 协议中的特殊标志，用于表示建立连接的请求。
+        服务器请求后，发送 ACK确认和 SYN 报文，表示同意建立连接。ACK 表示确认收到数据，SYN 表示继续建立连接。
+        客户端收到服务器的 ACK 和 SYN 报文后，再发送一个 ACK确认报文，表示连接已经建立成功
+    4.发送请求，服务端判断是否命中协商缓存
+        浏览器第一次请求一个资源的时候，服务器返回的header中会加上Last-Modified，Last-Modified是一个时间标识该资源的最后修改时间。或者ETag，保证每一个资源是唯一的，资源变化都会导致ETag变化
+        浏览器再次请求该资源的时候，发送的请求头中会携带 If-Modified-Since，就为之前返回的 Last-Modified的值，服务器收到If-Modified-Since之后，根据资源的最后修改时间判断是否命中缓存。
+        或者携带If-None-Match，也就是返回的Etag
+        服务器判断，没有更新过期，浏览器可以使用缓存，返回304，不会返回资源内容。否则返回新资源和200
+    5.资源发送完毕之后进行TCP的四次挥手
+        客户端发送一个带有FIN标志的数据包，标识要断开链接
+        服务端收到回复一个ACK包，标识同意收到，服务器进入CLOSE-WAIT状态
+        但是这个时候只是表示客户端不再请求，不代表服务端数据发送完毕，所以服务端数据发生完成后，发送一个带有FIN标志的包，表示断开链接，然后等待客户端的最后确认
+        客户端发送一个最后的ACK确认信号，服务端收到后就进行断开状态
+    6.浏览器的渲染过程
+        解析HTML：浏览器的第一步是解析HTML代码，生成DOM树
+        解析CSS：构造 CSSOM 树
+        如果遇到script标签时，JS引擎会进行加载并执行，这个过程会阻塞HTML、CSS的解析过程
+        DOM树和css树结合，生成render tree（渲染树）
+        然后进行布局（回流），计算确定节点位置/大小/布局等
+        最后进行将重绘，进行一些颜色，背景渲染，然后显示到屏幕上面。
 
 
-    性能优化：
+  性能优化：
       脚手架搭建：
         1. JS代码压缩                         terser-webpack-plugin
         2. CSS代码压缩                        css-minimizer-webpack-plugin
@@ -101,7 +101,7 @@
         9. 使用thread-loader开启多线程构建
         10. externals排除不打包的第三方包，通过CDN引入
       开发中：
-        1. 图片懒加载        IntersectionObserver
+        1. 图片懒加载    图片地址存储到data-xxx属性上,判断图片是否在可视区域(IntersectionObserver)设置src，const observer = new IntersectionObserver(cb) observer.observe(img)
         2. 防抖、节流
         3. 异步defer和async以及脚本放在body下面
         4. 大数据使用localStorage缓存
@@ -122,147 +122,101 @@
 
 
 
-
-
-
-
-
- 图片懒加载
-        将图片地址存储到 data-xxx 属性上,判断图片是否在可视区域(IntersectionObserver)就设置图片 src
-        const observer = new IntersectionObserver(callBack) observer.observe(imgRef.value);
-        防抖：多次触发只会触发最后一次。节流：一段时间内触发一次
-        使用异步和延迟加载js文件，避免js文件阻塞页面渲染，将js文件放到文件页面底部，避免阻塞页面渲染
-        压缩HTML、CSS代码体积
-        减少HTTP请求次数和请求大小
-        使用事件委托，减少事件绑定次数。
-        合理使用缓存
-        路由懒加载
-        keep-alive缓存组件
-        
+  Webpack
       Webpack的打包原理主要是基于模块化的思想，将项目中的各个文件（包括JavaScript、CSS、图片等静态资源）视为模块，
       并根据这些模块之间的依赖关系进行静态分析。然后，Webpack会根据指定的规则将这些模块打包成一个或多个静态资源文件（bundle），以供浏览器加载和执行
-
-      Webpack的热更新需要整个模块链重新打包和替换，对于大型项目可能会有延迟
 
       关于webpack热模块更新的总结如下：
       Webpack Dev Server启动时，会在浏览器和本地服务器之间建立一个WebSocket长连接，用于双向通信
       当webpack监听到对应的模块发生变化时，webpack会生成一个json文件和js文件，json包含需要更新的模块，js文件就是此次修改的代码
       通过WebSocket发送给浏览器
       浏览器拿到两个新的文件后，通过HMR runtime机制，加载这两个文件，并且针对修改的模块进行更新
+      Webpack的热更新需要整个 模块链重新编辑打包和替换，对于大型项目可能会有延迟
 
+      webpack的loader是一个函数，接收webpack传入的content文件内容，进行处理，然后返回content，分为同步loader和异步loader，
+      loader内部通过this.callback或者this.async()返回的callback返回处理后的内容
 
-      webpack优化
-        JS代码压缩        terser-webpack-plugin
-        CSS代码压缩       css-minimizer-webpack-plugin
-        Html文件代码压缩  HtmlWebpackPlugin
-        文件大小压缩       compression-webpack-plugin和nginx的gzip压缩
-        图片压缩          fileLoader和url去处理图片
-        Tree Shaking
-        代码分离
-        内联 chunk
-
-    提高Webpack的构建速度
-        优化 loader 配置                在使用Loader时，可以通过配置include、exclude、test属性来匹配文件
-        合理使用 resolve.extensions     通过resolve.extensions是解析到文件时自动添加拓展名 extensions:[".warm",".mjs",".js",".json"]
-        优化 resolve.modules            告知 webpack 去哪些目录下寻找第三方模块，默认值为['node_modules']。可以通过指明存放第三方模块的绝对路径来减少寻找的时间。
-        优化 resolve.alias              通过配置alias以减少查找过程
-        使用 DLLPlugin 插件             不经常改变的代码，抽成一个共享的库，减少不必要的打包构建
-        使用 cache-loader               在一些性能开销较大的 loader 之前添加 cache-loader，以将结果缓存到磁盘里，显著提升二次构建速度
-        terser 启动多线程               开启多进程并行运行可以提高构建速度  new TerserPlugin
-        合理使用 sourceMap              
+      webpack本身是基于tapable插件系统构建的，webpack用tapable构建了很多的插件hooks钩子，分布在webpack整个生命周期流程中，插件本身是个类，
+      主要是constructor和apply方法，注册插件会调用这两个方法，webpack会将compiler对象传入插件的apply方法中，在compiler对象上有许多钩子，
+      插件就可以在这里监听webpack各个流程的hooks去做对应的事情
     
-    webpack的loader是一个函数，接收webpack传入的content文件内容，进行处理，然后返回content，分为同步loader和异步loader，
-    loader内部通过this.callback或者this.async()返回的callback返回处理后的内容
-
-    webpack本身是基于tapable插件系统构建的，webpack用tapable构建了很多的插件hooks钩子，分布在webpack整个生命周期流程中，插件本身是个类，
-    主要是constructor和apply方法，注册插件会调用这两个方法，webpack会将compiler对象传入插件的apply方法中，在compiler对象上有许多钩子，
-    插件就可以在这里监听webpack各个流程的hooks去做对应的事情
-
-        200	OK。请求成功，服务器正常返回请求的数据。
-        201	Created。成功创建了新的资源。通常在 POST 请求或一些需要创建资源的操作后返回。
-        204	No Content。服务器成功处理了请求，但不返回任何内容。通常在不需要返回响应体的 DELETE 请求中使用。
-        301	Moved Permanently。永久重定向。请求的资源已被分配了新的 URL。浏览器会自动跳转到新的 URL。
-        302	Found。临时重定向。请求的资源已被分配了新的 URL。浏览器会自动跳转到新的 URL，但搜索引擎不会更新链接地址。
-        304	Not Modified。客户端的缓存资源仍有效，可以直接使用缓存的版本。
-        400	Bad Request。请求无效，服务器无法理解该请求。可能是请求参数缺失、格式错误等问题。
-        401	Unauthorized。请求要求身份验证。客户端需要提供有效的身份凭证才能访问资源。
-        403	Forbidden。服务器拒绝请求，权限不足。客户端没有访问资源的权限。
-        404	Not Found。请求的资源不存在。
-        500	Internal Server Error。服务器内部错误，无法完成请求。
-        502	Bad Gateway。作为代理或网关的服务器从上游服务器接收到无效的响应。
-        503	Service Unavailable。服务器暂时无法处理请求，通常是由于维护或过载造成的。
-
-
-
-Vite 是一种快速的现代化前端构建工具，相比传统的打包工具（如 webpack）具有以下优点：
-快速的冷启动：使用浏览器原生支持的 ES 模块加载方式，无需预构建和打包，直接在浏览器中运行。这样，在开发过程中保持了快速的冷启动时间，加快了开发反馈速度。
-按需编译：Vite 只会编译当前正在编辑的文件，而不是重新构建整个项目。当你保存修改后，只有被修改的文件会被重新编译，
-  大大缩短了每次保存的构建时间，提高了开发效率。
-真正的模块化热更新：Vite 支持真正的模块级热更新，它通过在开发服务器中搭建一个简单的 WebSocket 服务器，与运行在浏览器中的开发服务之间建立了一个实时的连接。
-  这使得只有相关模块发生更改时才会触发热更新，而不会影响其他模块，提供了更快速、可靠的热更新体验。
-零配置：Vite 提供了一种零配置的开发体验。它内置了对常见的前端框架（如 Vue、React 和 Preact）的支持，不需要复杂的配置即可开始开发。
-  同时，Vite 也提供了可扩展的插件系统，以便进行更高级的定制和配置。
-构建速度快：虽然 Vite 在开发过程中不需要进行传统的打包，但它仍然提供了一个生产环境的构建命令。Vite 使用 Rollup 进行构建，
-  通过 ESBuild 进行快速的 JavaScript 编译，以及采用了增量构建的方式，使得构建速度非常快。
-总的来说，，通过利用浏览器原生支持的特性，加速了项目的冷启动时间和热更新速度，从而提高了开发效率。
-
-
-
-
-
-双向数据绑定就是：数据劫持 + 发布订阅模式（观察者模式）。
-
-Vue2中在实例初始化时遍历 data 中的所有属性，并使用 Object.defineProperty把这些属性全部转为 getter/setter。并 劫持各个属性 getter 和 setter，在数据变化时发布消息给订阅者，触发相应的监听回调，而这之间存在几个问题
-
-初始化时需要遍历对象所有 key，如果对象层次较深，性能不好
-通知更新过程需要维护大量 dep 实例和 watcher 实例，额外占用内存较多
-Object.defineProperty 无法监听到数组元素的变化，只能通过劫持重写数方法
-动态新增，删除对象属性无法拦截，只能用特定 set/delete API 代替
-不支持 Map、Set 等数据结构
-Vue3中使用 Proxy 来监控数据的变化。Proxy 是 ES6 中提供的功能，其作用为：用于定义基本操作的自定义行为（如属性查找，赋值，枚举，函数调用等）。
-
-相对于Object.defineProperty()，有以下特点：
-
-Proxy 直接代理整个对象而非对象属性，这样只需做一层代理就可以监听同级结构下的所有属性变化，包括新增属性和删除属性。
-它的处理方式是在 getter 中去递归响应式，这样的好处是真正访问到的内部属性才会变成响应式，简单的可以说是按需实现响应式，减少性能消耗。
-Proxy 可以监听数组的变化。
-
-
-
-
-
-更灵活的响应式系统：Vue 2.x 中响应式系统的核心是 Object.defineProperty，劫持整个对象，然后进行深度遍历所有属性，给每个属性添加getter和setter，实现响应式。Vue 3.x 中使用 Proxy对象重写响应式系统。
-更快的渲染速度：Vue3 的编译器生成的渲染函数比 Vue2 生成的更高效。
-编译阶段：Vue 2.x 通过标记静态节点，优化 diff 的过程。Vue 3.x中标记和提升所有的静态节点，diff的时候只需要对比动态节点内容。
-更小的体积：Vue3 将源码拆分为多个独立的模块，这样就可以按需导入所需的模块，从而减小了整个库的体积。
-更好的 TypeScript 支持：Vue3 对 TypeScript 的支持更加友好，内部使用了更先进的 TypeScript 特性，并为其提供了更好的声明文件。
-更好的组件系统：比如，Vue3中引入了一个新的 Fragment 组件，它可以替代原来的 template 标签作为根节点
-新增了setup组合式API
+  Vite 
+      快速的现代化前端构建工具，相比传统的打包工具（如 webpack）具有以下优点：
+      1. 浏览器原生支持的 ES 模块，无需预构建和打包，快速的冷启动，直接在浏览器中运行，只在真正需要时才会去解析相应的模块
+      2. 模块化热更新 也是建立WebSocket 服务器，当某个模块内容改变时，只需要让浏览器重新请求该模块即可，不需要像webpack重新编译打包整个模块链
+      3. 配资相对简单，很多东西都是内置支持，如 TypeScript、JSX、CSS 等支持开箱即用，对react，vue也是有对应的配置。
+      4. Vite 使用 Rollup 进行构建，为生产环境打包
+     
+    
+  http状态码
+      200	OK。请求成功，服务器正常返回请求的数据。
+      201	Created。成功创建了新的资源。通常在 POST 请求或一些需要创建资源的操作后返回。
+      204	No Content。服务器成功处理了请求，但不返回任何内容。通常在不需要返回响应体的 DELETE 请求中使用。
+      301	Moved Permanently。永久重定向。请求的资源已被分配了新的 URL。浏览器会自动跳转到新的 URL。
+      302	Found。临时重定向。请求的资源已被分配了新的 URL。浏览器会自动跳转到新的 URL，但搜索引擎不会更新链接地址。
+      304	Not Modified。客户端的缓存资源仍有效，可以直接使用缓存的版本。
+      400	Bad Request。请求无效，服务器无法理解该请求。可能是请求参数缺失、格式错误等问题。
+      401	Unauthorized。请求要求身份验证。客户端需要提供有效的身份凭证才能访问资源。
+      403	Forbidden。服务器拒绝请求，权限不足。客户端没有访问资源的权限。
+      404	Not Found。请求的资源不存在。
+      500	Internal Server Error。服务器内部错误，无法完成请求。
+      502	Bad Gateway。作为代理或网关的服务器从上游服务器接收到无效的响应。
+      503	Service Unavailable。服务器暂时无法处理请求，通常是由于维护或过载造成的。
 
 
 
 
 
 
+  Vue2
+      Vue2中在实例初始化时遍历 data 中的所有属性，使用 Object.defineProperty把这些属性全部转为 getter/setter。并劫持各个属性getter和setter
+      初始化时需要遍历对象所有 key，如果对象层次较深，性能不好
+      通知更新过程需要维护大量 dep 实例和 watcher 实例，额外占用内存较多
+      Object.defineProperty 无法监听到数组元素的变化，只能通过劫持重写数方法
+      动态新增，删除对象属性无法拦截，只能用特定 set/delete API 代替
+      不支持 Map、Set 等数据结构
+  Vue3
+      使用 Proxy 来监控数据的变化
+      Proxy 直接代理整个对象而非对象属性，这样只需做一层代理就可以监听同级结构下的所有属性变化
+      包括新增属性和删除属性
+      真正访问到的内部属性才会变成响应式，简单的可以说是按需实现响应式，减少性能消耗，不需要一上来就递归监听
+      可以监听数组的变化
+      支持Map，Set
 
-    React 的 diff 算法：
+
+      更快的渲染速度：Vue3 的编译器生成的渲染函数比 Vue2 生成的更高效。
+      编译阶段：Vue 2.x 通过标记静态节点，优化 diff 的过程。Vue 3.x中标记和提升所有的静态节点，diff的时候只需要对比动态节点内容。
+      更小的体积：Vue3 将源码拆分为多个独立的模块，这样就可以按需导入所需的模块，从而减小了整个库的体积。
+      更好的 TypeScript 支持：Vue3 对 TypeScript 的支持更加友好，内部使用了更先进的 TypeScript 特性，并为其提供了更好的声明文件。
+      更好的组件系统：比如，Vue3中引入了一个新的 Fragment 组件，它可以替代原来的 template 标签作为根节点
+      新增了setup组合式API
+
+
+
+
+
+  React 的 diff 算法：
       react列表对比采用的是从左到右依次对比的方式（因为fiber链表架构的原因）
-      React diff 算法会首先比较两棵树的根节点，、节点类型不同，直接删除旧，插入新节点；节点类型相同，继续比较子节点。（核心思想是比较和替换节点）
-    Vue 的 diff 算法：
+      React diff 算法会首先比较两棵树的根节点，节点类型不同，直接删除旧，插入新节点；节点类型相同，继续比较子节点。（核心思想是比较和替换节点）
+  Vue 的 diff 算法：
       vue的列表对比，采用的是两端到中间比对的方式，找到最长的相同子序列。
       Vue 会对动态节点进行跟踪，节点在新旧虚拟 DOM 中位置发生变化，Vue 会尽可能地将其移动到新的位置，而不是删除和重新插入节点。（核心思想是移动复用节点）
       Vue3里面有静态提升，静态节点直接复用
 
+  key的作用是为了更高效的更新虚拟dom（提升渲染效率），
+      1. 比如列表中我们想在BC中间加一个D，用id做key，diff对比时可以知道前后是之前的节点。只需要找到正确的位置插入新节点
+      2. BC节点就不用删除，可以判断其内容是否变更，没有变更就直接复用。这样效率和性能就很好
+      3. 如果用index，那么插入删除的时候，index顺序就全变了，key就没有任何效果，某些情况下还可能出错
 
 
-    react fiber
-      背景：
-        react以前从setState到渲染完成整个过程是同步的。如果需要渲染的组件比较庞大，逻辑比较复杂， js就会占据主线程时间较长，会导致页面响应度变差，
-        导致react在动画、用户插入其他操作时体验就会变差，因为主线程是被js占用的，因此任何交互、布局、渲染都会停止，给用户的感觉就是页面被卡住了。
-      介绍：
-        fiber是一种模拟调用栈的特殊链表数据结构，为了解决传统调用栈无法暂停的问题，是React协调算法，目的是提高性能，解决调度问题。
-        fiber实现了增量渲染和并发，可以将渲染过程分割成多个阶段，每个阶段可以中断和恢复，
-        在浏览器允许的情况下一点点拼凑出最终渲染效果，在渲染时可以更好地控制优先级，先执行优先级高的事。
+  react fiber
+    背景：
+      react以前从setState到渲染完成整个过程是同步的。如果需要渲染的组件比较庞大，逻辑比较复杂， js就会占据主线程时间较长，会导致页面响应度变差，
+      导致react在动画、用户插入其他操作时体验就会变差，因为主线程是被js占用的，因此任何交互、布局、渲染都会停止，给用户的感觉就是页面被卡住了。
+    介绍：
+      fiber是一种模拟调用栈的特殊链表数据结构，为了解决传统调用栈无法暂停的问题，是React协调算法，目的是提高性能，解决调度问题。
+      fiber实现了增量渲染和并发，可以将渲染过程分割成多个阶段，每个阶段可以中断和恢复，
+      在浏览器允许的情况下一点点拼凑出最终渲染效果，在渲染时可以更好地控制优先级，先执行优先级高的事。
 
 
     React在document处监听所有支持的事件，当事件发生并冒泡至document处时，React将事件内容封装并交由真正的处理函数运行。
@@ -270,7 +224,7 @@ Proxy 可以监听数组的变化。
     另外冒泡到 document 上的事件也不是原生浏览器事件，而是 React 自己实现的合成事件。消除了不同浏览器之前的兼容性，有相同的事件表现。
     react17后面将事件绑定到根组件上了
 
-    useTransition
+  useTransition
       官方说法：将状态更新标记为非阻塞的 transition 
       被 startTransition 回调包裹的 setState 触发的渲染被标记为不紧急渲染，这些渲染可能被其他紧急渲染所抢占
       const [isPending, startTransition] = useTransition()
@@ -278,7 +232,7 @@ Proxy 可以监听数组的变化。
       如输入框输入，下面列表实时更新，数据量过大，你边输入，列表边更新，页面就会卡顿，使用startTransition(() => setInputValue(value))
       将列表设置为过渡状态，让它的优先级降低，所以当你输入的时候， 下面列表更新不会阻塞你的输入，因为你的输入优先级更高
       这样就能解决这个卡顿问题，还可以使用isPending来设置一个loading状态
-    useDeferredValue
+  useDeferredValue
       可延迟的状态更新
       const [query, setQuery] = useState('');
       const deferredQuery = useDeferredValue(query)
@@ -295,123 +249,89 @@ Proxy 可以监听数组的变化。
 
 
 
-    keep-alive
-      1.搭配组件name属性使用
-      2.提供 include 和 exclude 属性，exclude优先级高
-      3.激活触发activated 和 移除触发deactivated
-      4.keep-alive内部缓存的是组件虚拟dom
-      5.内部有个cache对象存储组件实例，keys数组缓存键名，超过最大缓存数量max的时候，会删除最久未使用的即第一个，当cache中存在的组件被命中时，会调整组件key到最近
+  keep-alive
+    1.搭配组件name属性使用
+    2.提供 include 和 exclude 属性，exclude优先级高
+    3.激活触发activated 和 移除触发deactivated
+    4.keep-alive内部缓存的是组件虚拟dom
+    5.内部有个cache对象存储组件实例，keys数组缓存键名，超过最大缓存数量max的时候，会删除最久未使用的即第一个，当cache中存在的组件被命中时，会调整组件key到最近
 
-    qiankun微前端
-      关注一个路由匹配子应用，js沙箱隔离，css隔离，props传递， 资源预加载，跨域处理（设置CORS或者主应用进行nginx反向代理）
-      1. 分为主应用和子应用，主应用registerMicroApps子应用，调用start开启微前端
-      2. qiankun通过popState（浏览器前进后退）/pushState/replaceState或者hashChange监听路由规则激活对应的子应用
-      3. 子应用不需要安装qiankun，子应用需要设置路由前缀和publicPath为主应用激活路由，
-      4. 子应用需要通过window.__POWER_BY_QIANKUN__判断是否在主应用中运行，来判断是否挂载到主应用的container下还是自己的根组件下，在主应用的时候隐藏菜单栏
-      5. 子应用需要修改webpack的ouput.libraryTarget为umd模式（支持 Commonjs、AMD，可以在浏览器或者非浏览器中运行）
-      6. 主应用fetch加载子应用的entry入口，得到HTML模板，解析其中的Script脚本， 判断script是直接执行还是src资源，src资源fetch再次请求，最后script脚本通过eval执行
-      7. 子应用是umd模式，所以可以拿到入口文件暴露的生命周期函数，暴露的mount生命周期，传入主应用的container，子应用进行挂载
-      8. 子应用之间的跳转通过history.pushState()
-      9. js隔离使用snapshotSandbox和proxySandbox来进行沙箱隔离
-            snapshotSandbox在激活销毁子应用的时候，通过保存window的快照来实现属性的保存和销毁，需要遍历window对象，性能差，不支持多个子应用激活，会存在污染
-            proxySandbox，通过Proxy来进行多实例的隔离机制，执行子应用js代码时，将将子应用的 window赋值为proxySandbox的实例，
-            子应用操作window实际操作对应的proxySandboxWindow，做的所有赋值都是操作的ProxyWindow，访问proxyWindow本身上没有的属性时，没有会去访问真实的window
-            这样就做到了window无污染和共存多个子应用。
-      10. 微前端css隔离采用的是ShadowDom节点来隔离，或者为对应的子应用添加一个对应的选择器
-
-
-
-
-    webSocket
-      webSocket出现之前，想实现实时通信、服务端消息推送功能，是使用 Ajax 轮询两种方式，http包含较大请求头，浪费带宽，服务器压力大。
-      网络传输协议，基于TCP建立的双全工通信，允许服务端主动推送消息，只需要建立一次握手，就可以建立持久性的链接。
-        减少网络延迟，减少服务器压力。
-        可以用于实时聊天、在线协作、推送服务、在线游戏
-        const socket = new WebSocket('ws://localhost:8888')
-        socket.onopen = () => console.log('WebSocket connection opened')
-        socket.send('message')
-        socket.onmessage = event => console.log('event.data')
-        socket.onclose => console.log('close')
-
-
-    http头信息
-      请求头
-        Host                 主机
-        If-None-Match:       E-tag缓存
-        If-Modify-Since      Last-Modify缓存
-        cache-control        max-age强缓存
-        expries              绝对时间强缓存
-        cookie               cookie
-        user-agent           客户端信息
-        referer              请求来源
-        Accept               可处理媒体类型
-        accept-encoding      内容编码
-        accept-language      语言
-        Authorization        授权
-      响应头
-        content-type
-        Content-Language
-        Content-Length
-        E-tag
-        Last-Modify
-        Expires 
-        set-cookie
-        Server 
-        access-control-allow-origin
-        access-control-allow-methods
+  qiankun微前端
+    关注一个路由匹配子应用，js沙箱隔离，css隔离，props传递， 资源预加载，跨域处理（设置CORS或者主应用进行nginx反向代理）
+    1. 分为主应用和子应用，主应用registerMicroApps子应用，调用start开启微前端
+    2. qiankun通过popState（浏览器前进后退）/pushState/replaceState或者hashChange监听路由规则激活对应的子应用
+    3. 子应用不需要安装qiankun，子应用需要设置路由前缀和publicPath为主应用激活路由，需要在入口文件导出qiankun生命周期函数供qiankun调用
+    4. 子应用需要通过window.__POWER_BY_QIANKUN__判断是否在主应用中运行，来判断是否挂载到主应用的container下还是自己的根组件下，在主应用的时候隐藏菜单栏
+    5. 子应用需要修改webpack的ouput.libraryTarget为umd模式（支持 Commonjs、AMD，可以在浏览器或者非浏览器中运行）
+    6. 主应用fetch加载子应用的entry入口，得到HTML模板，解析其中的Script脚本， 判断script是直接执行还是src资源，src资源fetch再次请求，最后script脚本通过eval执行
+    7. 子应用是umd模式，所以可以拿到入口文件暴露的生命周期函数，暴露的mount生命周期，传入主应用的container，子应用进行挂载
+    8. 子应用之间的跳转通过history.pushState()
+    9. js隔离使用snapshotSandbox和proxySandbox来进行沙箱隔离
+          snapshotSandbox在激活销毁子应用的时候，通过保存window的快照来实现属性的保存和销毁，需要遍历window对象，性能差，不支持多个子应用激活，会存在污染
+          proxySandbox，通过Proxy来进行多实例的隔离机制，执行子应用js代码时，将将子应用的 window赋值为proxySandbox的实例，
+          子应用操作window实际操作对应的proxySandboxWindow，做的所有赋值都是操作的ProxyWindow，访问proxyWindow本身上没有的属性时，没有会去访问真实的window
+          这样就做到了window无污染和共存多个子应用。
+    10. 微前端css隔离采用的是ShadowDom节点来隔离，或者为对应的子应用添加一个对应的选择器
 
 
 
 
+  webSocket
+    webSocket出现之前，想实现实时通信、服务端消息推送功能，是使用 Ajax 轮询两种方式，http包含较大请求头，浪费带宽，服务器压力大。
+    网络传输协议，基于TCP建立的双全工通信，允许服务端主动推送消息，只需要建立一次握手，就可以建立持久性的链接。
+      减少网络延迟，减少服务器压力。
+      可以用于实时聊天、在线协作、推送服务、在线游戏
+      const socket = new WebSocket('ws://localhost:8888')
+      socket.onopen = () => console.log('WebSocket connection opened')
+      socket.send('message')
+      socket.onmessage = event => console.log('event.data')
+      socket.onclose => console.log('close')
 
-    webWork
-      作用为js创造多线程环境，创建Worker线程，将一些任务分给Worker线程进行。主线程运行同时,Worker线程后台运行
-      当Worker线程完成任务将结果返回给主线程，这样的好处是，一些计算密集型或高延迟的任务，被 Worker 线程负担了，主线程（通常负责 UI 交互）就会很流畅，不会被阻塞或拖慢。
-      无法读取 DOM 对象，无法使用document、window，可以使用navigator和location。
-      主线程与work通信是拷贝关系，即是传值而不是传址
-        const worker = new Worker('work.js')        // 参数是一个脚本文件，该文件就是 Worker 线程所要执行的任务，由于 Worker 不能读取本地文件，所以这个脚本必须来自网络
-        worker.postMessage('Hello World')           // 主线程调用worker.postMessage()方法，向 Worker 发消息
-        worker.onmessage = event => console.log(event.data) // 主线程通过worker.onmessage指定监听函数，接收子线程发回来的消息
-        self.onmessage = event => console.log(event.data) // work.js，内部有一个监听函数，监听message事件，也可以使用self.addEventListener('message', event => console.log(event.data))
-        self.postMessage('send data')              // self.postMessage()向主线程发送消息
-        importScripts('script1.js')                // Worker 内部如果要加载其他脚本（不能加载外部文件），用 importScripts()
-        self.close()                               // 用于在 Worker 内部关闭自身
+
+  http头信息
+    请求头
+      Host                 主机
+      If-None-Match:       E-tag缓存
+      If-Modify-Since      Last-Modify缓存
+      cache-control        max-age强缓存
+      expries              绝对时间强缓存
+      cookie               cookie
+      user-agent           客户端信息
+      referer              请求来源
+      Accept               可处理媒体类型
+      accept-encoding      内容编码
+      accept-language      语言
+      Authorization        授权
+    响应头
+      content-type
+      Content-Language
+      Content-Length
+      E-tag
+      Last-Modify
+      Expires 
+      set-cookie
+      Server 
+      access-control-allow-origin
+      access-control-allow-methods
+
+
+
+
+
+  webWork
+    作用为js创造多线程环境，创建Worker线程，将一些任务分给Worker线程进行。主线程运行同时,Worker线程后台运行
+    当Worker线程完成任务将结果返回给主线程，这样的好处是，一些计算密集型或高延迟的任务，被 Worker 线程负担了，主线程（通常负责 UI 交互）就会很流畅，不会被阻塞或拖慢。
+    无法读取 DOM 对象，无法使用document、window，可以使用navigator和location。
+    主线程与work通信是拷贝关系，即是传值而不是传址
+      const worker = new Worker('work.js')        // 参数是一个脚本文件，该文件就是 Worker 线程所要执行的任务，由于 Worker 不能读取本地文件，所以这个脚本必须来自网络
+      worker.postMessage('Hello World')           // 主线程调用worker.postMessage()方法，向 Worker 发消息
+      worker.onmessage = event => console.log(event.data) // 主线程通过worker.onmessage指定监听函数，接收子线程发回来的消息
+      self.onmessage = event => console.log(event.data) // work.js，内部有一个监听函数，监听message事件，也可以使用self.addEventListener('message', event => console.log(event.data))
+      self.postMessage('send data')              // self.postMessage()向主线程发送消息
+      importScripts('script1.js')                // Worker 内部如果要加载其他脚本（不能加载外部文件），用 importScripts()
+      self.close()                               // 用于在 Worker 内部关闭自身
 */
 
-
-
-/**
-   微信小程序埋点SDK 2021.11 - 2022.09
-   技术栈：rollup + pnpm + monorepo + changesets + typescript
-   项目介绍：微信小程序埋点SDK-js开发，用于小程序数据采集和上报。收集用户信息、设备信息、记录用户行为、程序PV、UV、手机型号、用户事件等。
-   数据收集可以用于分析优化产品功能、获取目标群体画像、获取浏览数据、改进用户体验。项目js通过代理微信小程序应用、页面、组件生命周期、点击事件、停留、分享等内部事件
-   通过自动埋点采集、以及手动埋点上报合规采集数据。主要服务于公司内部各个小程序项目和与和公司建议合作保险公司的小程序项目。
-   本人主要职责：
-      1.负责小程序埋点SDK新版本的开发
-      2.负责埋点SDK功能正常迭代，保险公司的定制化埋点功能开发
-      3.负责开发埋点接入案例体验版小程序，用于展示埋点SDK各个功能以及使用方式
-      4.负责编写埋点SDK功能文档以及接入文档说明，作为小程序埋点SDK负责人处理各项目埋点上报问题
-      5.小程序插件系统开发，采用monorepo+ pnpm + changesets形式管理埋点SDK以及埋点SDK插件
-      6.查看Vue3源码借鉴rollup如何处理多包本地开发、命令行交互、生产打包、以及changeset运行npm发版
-      7.小程序埋点SDK数据加密插件开发，对上报报文采用 AES + RSA 混合加密上报
-      8.负责对外保险公司小程序埋点SDK的接入以及手动代码埋点接入以及问题处理
- */
-
- /**
-   用户行为分析埋 + 点数据采集后台管理系统 2022.10 - 2023.09
-   技术栈：react17 + umi3 + typescript + umi微前端 + antd4 + procomponents + echarts + antv
-   项目介绍：项目基于umi3的微前端qiankun插件搭建，分为一个主应用以及下属四个分应用集成（行为分析系统、埋点元数据管理系统、流量分析系统、cdp系统）
-   行为分析系统：对各终端埋点SDK采集的项目进行事件分析、行为分析、漏斗分析、归因分析、图表看板制作等
-   埋点元数据管理系统：对各终端埋点SDK采集的元数据进行管理、oneId体系建设、SDK加密公钥管理、埋点事件管理、用户属性管理、埋点公共属性管理等
-   流量分析系统：WEB页面分析、APP页面分析、小程序页面分析等
-   cdp系统：客户数据平台，权限管理、角色管理、用户管理等
-   本人主要职责：
-      1.负责行为分析系统的各个分析模块的需求开发、漏斗分析搭建开发、分析大屏看板开发
-      2.埋点元数据管理系统的需求开发迭代
-      3.oneId用户标识统一模块开发、埋点产品体系建设开发
-      4.对外保险公司定制化看板开发，涉及饼/折线/柱状/地图/漏斗/桑吉/关系/归因/知识图谱等图表分析看板。以及其他定制化功能开发
-      5.对外保险公司部署时，负责主子应用的微前端注册以及路由菜单处理
- */
   </script>
 </html>
 <script></script>
