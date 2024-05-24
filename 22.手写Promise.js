@@ -136,3 +136,30 @@ p1.then(data => {
 function isPromise(obj) {
   return !!(obj && typeof obj === "object" && typeof obj.then === "function");
 }
+
+
+
+console.log('start')
+
+Promise.resolve().then(() => {
+  console.log('pro')
+})
+
+new Promise((resolve) => {
+  console.log('pro2')
+  resolve()
+  console.log('pro3')
+}).then(() => {
+  console.log('pro4')
+})
+
+new Promise(async (resolve) => {
+  console.log('pro5')
+  await 1
+  console.log('pro6')
+})
+process.nextTick(() => {
+  console.log('nextTick1')
+})
+
+console.log('end')
