@@ -141,10 +141,12 @@
     
   Vite 
       快速的现代化前端构建工具，相比传统的打包工具（如 webpack）具有以下优点：
-      1. 浏览器原生支持的 ES 模块，无需预构建和打包，快速的冷启动，直接在浏览器中运行，只在真正需要时才会去解析相应的模块
-      2. 模块化热更新 也是建立WebSocket 服务器，当某个模块内容改变时，只需要让浏览器重新请求该模块即可，不需要像webpack重新编译打包整个模块链
-      3. 配资相对简单，很多东西都是内置支持，如 TypeScript、JSX、CSS 等支持开箱即用，对react，vue也是有对应的配置。
-      4. Vite 使用 Rollup 进行构建，为生产环境打包
+      1. 浏览器原生支持的 ES 模块，直接在浏览器中运行，不需要像webpack一样去分析依赖，只在真正需要时才会去解析相应的模块
+      2. 使用esbuild进行预构建，将CommonJs转换为ESM模式，使用Go语言编写，多线程并行，所以很快。
+      3. Vite 使用 esbuild 将 TypeScript 转译到 JavaScript，约是 tsc 速度的 20~30 倍
+      4. 模块化热更新 也是建立WebSocket 服务器，当某个模块内容改变时，只需要让浏览器重新请求该模块即可，不需要像webpack重新编译打包整个模块链
+      5. 配资相对简单，很多东西都是内置支持，如 TypeScript、JSX、CSS 等支持开箱即用，对react，vue也是有对应的配置。
+      6. Vite 使用 Rollup 进行构建，为生产环境打包
      
     
   http状态码
@@ -370,9 +372,44 @@
         2. 使用Token，浏览器请求会自动携带cookie，但是不会携带token
         3.验证请求头中的Referer 字段，记录了该 HTTP 请求的来源地址
 
+  
+
+  sessionStorage
+    就是会话级别的存储（关键在于会话）
+    在A页面点击超链接或者在控制台window.open打开页面B，都是属于当前页面的延续，属于一个会话（B可以拿到A的sessionStorgae）
+    页面打开的时候复制了A页面的sessionSession，仅仅是复制此时，无论修改A页面的sessionStorage还是修改B页面的SessionStorage，都不会彼此影响
+    在A页面已经打开的前提下，然后在新tab打开同域页面C，此时C和A页面无直接关系，不属于一个会话
+  
 
 
+  跨标签页通信
+    BroadcastChannel  可以实现同源下浏览器不同窗口，Tab 页， iframe 下的(通常是同一个网站下不同的页面) 之间的简单通讯
+      const channel = new BroadcastChannel('myChannel')
+      channel.postMessage('Hello from Tab 1!')
+      const channel = new BroadcastChannel('myChannel')
+      channel.onmessage = (event) => { console.log(event.data) }
+      channel.close()
+    localStorage    当存储区域（localStorage 或 sessionStorage）被修改时，将触发 storage 事件（只有在另一个标签页才触发
+    window.open、window.postMessage   通过在一个标签页中使用window.open打开另一个标签页，并使用window.postMessage进行消息传递，可以实现跨标签页通信
+      const newTab = window.open('other.html')
+      newTab.postMessage('Hello from Tab 1!', '*')
+      window.addEventListener('message', function(event) { console.log(event.data) })
+    轮训cookie
+  
+
+
+
+  ES 模块和 CommonJS 模块化
+    ES 模块 import 和 export，现代Web开发 | require()，module.exports 或 exports，开头var exports = module.exports，结尾导出module.exports
+    ES 模块的静态解析，在代码执行前已经确定，支持 tree shaking | commonjs是动态引入，可以在运行时根据条件加载模块
+    require 为浅拷贝，可修改 | import 只读的（修改报错），如果引入 a 是一个对象，允许改写对象属性
+  
+
+  requestAnimationFrame 和 requestIdleCallback
+    requestAnimationFrame 在浏览器下一次重绘之前执行，以确保动画的流畅性和性能，动画游戏，每秒约 60 次的频率，这与浏览器的刷新率相匹配（通常为每秒 60 次）
+    requestIdleCallback 是一个用于在浏览器空闲时执行指定的回调函数的方法，执行一些低优先级的任务，执行分析、预加载资源、后台数据同步等
 */
+
 
   </script>
 </html>
