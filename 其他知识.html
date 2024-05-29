@@ -224,11 +224,35 @@
       导致react在动画、用户插入其他操作时体验就会变差，因为主线程是被js占用的，因此任何交互、布局、渲染都会停止，给用户的感觉就是页面被卡住了。
     介绍：
       fiber是一种模拟调用栈的特殊链表数据结构，为了解决传统调用栈无法暂停的问题，是React协调算法，目的是提高性能，解决调度问题。
-      fiber实现了增量渲染和并发，可以将渲染过程分割成多个阶段，每个阶段可以中断和恢复，
-      在浏览器允许的情况下一点点拼凑出最终渲染效果，在渲染时可以更好地控制优先级，先执行优先级高的事。
+      Fiber 采用链表数据结构的原因是因为链表可以方便地在列表的中间插入和删除元素，有更好的插入和删除性能，数组中执行这些操作通常需要移动大量元素，而在链表中只需要修改一些指针即可。
+      这在构建和更新用户界面时非常有用，因为可能会有大量的元素需要插入或删除，链表缺点：然而，链表的查找性能通常比数组差，因为需要遍历整个列表才能找到所需的元素。
+      Fiber 架构通过将更新任务拆分为更小的部分并在事件循环中交替执行它们，从而实现了一种称为时间切片的技术
+      根据任务的优先级对它们进行调度，每个任务都有一个权重值，表示它的优先级，在渲染时可以更好地控制优先级，先执行优先级高的事。
+      Fiber增量渲染，每个阶段可以中断和恢复， 渲染过程是分"帧"进行的。每个帧都是一段时间，在这段时间内，React可以执行一些工作，然后将控制权返回给浏览器。浏览器在渲染过程中处理用户输入或其他，避免阻塞UI。
+      让出控制权的技术通常是通过使用浏览器的 requestIdleCallback 实现的（react通过MessageChannel + requestAnimationFrame自己模拟实现了requestIdleCallback）
+        MessageChannel
+          允许我们在不同的浏览上下文，比如window.open()打开的窗口或者iframe等之间建立通信管道，并通过两端的端口（port1和port2）发送消息。是异步的宏任务
+          const { port1, port2 } = new MessageChannel() port1.postMessage('ping') port2.onmessage
+          通过在requestAnimationFrame中调用MessageChannel来判断当前帧剩余时间，来达到中断任务和让出控制权
+        为什么不是requestIdleCallback？
+          requestIdleCallback的执行时机是浏览器的空闲时间执行。其实执行的时机依然是不准确的，并不是所有浏览器都支持的
+        为什么不使用 requestAnimationFrame
+          执行时机是页面渲染前，依然有可能会阻塞渲染
+        为什么不是setTimeout？
+          有延迟，setTimeout的递归层级过深的话，延迟就不是1ms，而是4ms，会不流程
+      
+  setState() 
+    setState({key : value}) | setState(state=> {key : value}) | setState({key : value}, () => console.log('Count has been updated to:', this.state.count))
+    将对组件 state 的更新排入队列，批量异步更新，优化渲染性能，
+    在react18使用createRoot创建render渲染的应用，并发模式下，都是异步的。之前的版本被react标记为legacy，遗物，有可能是异步，有可能是同步
+    在原生事件和setTimeout中调用是同步的，合成事件和生命周期中是同步的，主要原因就是react中的 batchUpdate 批量更新机制
+    原生事件和setTimeout中，没有进入React的调度流程，executionContext为NoContent，所以是同步的，生命周期和合成事件中会进入React的调度流程，所以是异步的
+  
+  useState
+    简单实现：用一个数组保存state，另外一个数组保存statesetters，然后全局维护一个状态索引stateIndex，当setState时候，更改对应的state并保存在数组中，触发组件的render函数，然后在重置stateIndex
+    useState不能在条件/循环/嵌套函数中执行，是因为组件中的useState依赖这个stateIndex，如果某次少了一个State，那么更新顺序就会出错 
 
-
-    React在document处监听所有支持的事件，当事件发生并冒泡至document处时，React将事件内容封装并交由真正的处理函数运行。
+  React在document处监听所有支持的事件，当事件发生并冒泡至document处时，React将事件内容封装并交由真正的处理函数运行。
     减少了内存消耗，还能在组件挂载销毁时统一订阅和移除事件。
     另外冒泡到 document 上的事件也不是原生浏览器事件，而是 React 自己实现的合成事件。消除了不同浏览器之前的兼容性，有相同的事件表现。
     react17后面将事件绑定到根组件上了
